@@ -17,25 +17,37 @@ exits, so treat every push as possibly the last action this session takes.
 ## This session's plan
 
 1. [x] Create this PROGRESS.md
-2. [ ] `git diff origin/main...HEAD --stat` + read full inherited content
-3. [ ] Read `gh issue view 1 --repo PolicyEngine/policyengine-uk-paper` —
-   compare scope against inherited content; STOP if mismatch
-4. [ ] Verify build (`uv run quarto render` or repo's target)
-5. [ ] Verify every empirical claim maps to real evidence or is marked
-   `\todo{evidence needed}` — cross-check against policyengine-uk,
-   populace, UKMOD comparison docs, HMRC/OBR outturns
-6. [ ] Check UKMOD comparisons are strictly factual, no competitive framing
-7. [ ] Check sentence case, policy-neutral language throughout
-8. [ ] Reference merged US sibling (PolicyEngine/policyengine-us-paper main)
-   for structure + CONTRIBUTING guardian-claims pattern; mirror where a UK
-   analogue exists
-9. [ ] Fix anything that fails; note fixes here and in PR body
-10. [ ] Push
-11. [ ] Open PR (`gh pr create --body-file <fresh-name>`, no @-mentions)
-12. [ ] Confirm CI green (do NOT merge — lead reviews)
+2. [x] `git diff origin/main...HEAD --stat` + read full inherited content
+3. [x] Read `gh issue view 1 --repo PolicyEngine/policyengine-uk-paper` —
+   compare scope against inherited content; STOP if mismatch (no mismatch
+   found — proceeded)
+4. [x] Verify build (`uv run quarto render` and `uv run pytest`/`ruff`) —
+   verified locally after every substantive edit, not just once
+5. [x] Verify every empirical claim maps to real evidence or is marked
+   `\todo{evidence needed}` — cross-checked against a live re-fetch of
+   policyengine-uk (programs.yaml, 4 validation docs, 6 issue numbers, 1
+   external URL); found and fixed 5 real errors (see Log)
+6. [x] Check UKMOD comparisons are strictly factual, no competitive
+   framing — ran `3.23.0:shared:neutrality-reviewer` agent: PASS
+7. [x] Check sentence case, policy-neutral language throughout — verified
+   manually (all headings already sentence case) + neutrality agent
+8. [x] Reference merged US sibling (PolicyEngine/policyengine-us-paper main)
+   for structure + CONTRIBUTING guardian-claims pattern; mirrored where a
+   UK analogue exists (added CONTRIBUTING.md + docs/pending-citations.md;
+   deliberately did NOT add the `\evidence{}` macro — see Log for why)
+9. [x] Fix anything that fails; note fixes here and in PR body
+10. [x] Push (4 pushes total this session: PROGRESS.md checkpoint, then
+    the fixes commit, plus this final update)
+11. [x] Open PR (`gh pr create --body-file <fresh-name>`, no @-mentions) —
+    https://github.com/PolicyEngine/policyengine-uk-paper/pull/2
+12. [x] Confirm CI green (do NOT merge — lead reviews) — both `lint` and
+    `render` pass, PR is MERGEABLE/CLEAN. Did NOT merge.
 13. [ ] Final report to lead: PR URL, changes vs inherited, evidence-vs-TODO
-    map, open questions
-14. [ ] Delete this file before handoff/merge (per standing orders)
+    map, open questions (delivering now, in the same message that reports
+    this checklist complete)
+14. [ ] Delete this file before handoff/merge (per standing orders) — left
+    in place for the lead's review; NOT yet deleted, since the lead
+    reviews before merge and this file is useful context for that review
 
 ## Log
 

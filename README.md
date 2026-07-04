@@ -5,10 +5,10 @@ validation of the full tax-benefit microsimulation model — rules coverage,
 data (the populace stack), and validation against administrative outturns
 and incumbent models (UKMOD/EUROMOD, and against HMRC/DWP ready reckoners and outturns where comparable).
 
-Every serious model has this citation (EUROMOD's Sutherland–Figari 2013,
-TAXSIM's Feenberg–Coutts 1993); PolicyEngine UK does not yet. The paper is
-*versioned*: v1 documents the model as deployed in 2026; engine migrations
-later produce a v2 rather than invalidating v1.
+EUROMOD (Sutherland–Figari 2013) and TAXSIM (Feenberg–Coutts 1993) each
+have a standard citable methods paper; PolicyEngine UK does not yet. The
+paper is *versioned*: v1 documents the model as deployed in 2026; engine
+migrations later produce a v2 rather than invalidating v1.
 
 Validation assets assembled from: the policyengine-uk test suite, docs, and
 validation notebooks (`docs/book/validation/`), and the populace UK build
@@ -38,3 +38,17 @@ evidence mapped to existing sources, or marked `\todo{evidence needed}`
 where no such evidence was found. No results, figures, or numbers are
 fabricated — everything cites a specific, checkable file or publication.
 Full prose drafting is the next milestone.
+
+## Layout
+
+- `paper/` — Quarto + LaTeX manuscript (IJM style), sections under
+  `paper/sections/`.
+- `paper/bibliography/references.bib` — only bibliographic entries
+  verified against a primary source; see its header comment.
+- `docs/pending-citations.md` — citations named in the outline but not yet
+  verified against a primary source.
+- `CONTRIBUTING.md` — the evidence rule, review-tier doctrine, and
+  guardian-claims this repository follows.
+- `PLAN.md` — the section-by-section evidence map.
+- `tests/` — structural checks (section wiring, `\todo{}` brace balance,
+  bibliography comment safety); run via `uv run pytest`.

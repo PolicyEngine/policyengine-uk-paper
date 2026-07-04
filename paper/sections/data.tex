@@ -19,7 +19,9 @@ and demographic characteristics, produced for HBAI and other official
 statistics. \todo{Standard FRS citation (DWP/ONS or UK Data Service), sample
 size, and years currently supported by policyengine-uk -- confirm supported
 years from policyengine\_uk/programs.yaml's verified\_start\_year fields
-(earliest is 2019) and any dataset-loading code, not from memory.}
+(earliest is 2013, for council\_tax\_reduction; 2019 is the earliest across
+the bulk of programs, but is not the single earliest value in the file as
+of 2026-07-04) and any dataset-loading code, not from memory.}
 
 \subsection{Enhancement: SPI-informed synthetic high-income records}
 \label{sec:data-efrs}
@@ -82,9 +84,19 @@ uprating index used for every income, subtraction, and housing-cost
 component in the \hbai{} income definition (e.g. \texttt{employment\_income}
 uprated on \texttt{gov.obr.per\_capita.employment\_income}; rents uprated on
 outturn regional data through 2025 and \obr{} aggregate rent forecasts
-thereafter). A more detailed rent- and council-tax-nowcasting methodology is
-documented separately (\texttt{docs/book/assumptions/rf-nowcasting-methodology.md},
-\todo{summarize once read in full -- not yet reviewed for this outline}).
+thereafter). \policyengine{}'s own growth-rate assumptions are documented
+separately in \texttt{docs/book/assumptions/growthfactors.md}.
+\texttt{docs/book/assumptions/rf-nowcasting-methodology.md} is a distinct,
+paired reference: it summarizes the Resolution Foundation's own (external,
+third-party) nowcasting methodology -- not \policyengine{}'s -- for
+comparison, with the high-level differences between the two approaches
+tabulated in \texttt{docs/book/assumptions/nowcasting-comparison.md}.
+\todo{Summarize \texttt{growthfactors.md} and, if a citable comparison is in
+scope for this paper, the specific points of difference from RF's approach
+in \texttt{nowcasting-comparison.md} -- neither has been read in full for
+this outline; only their existence and stated purpose (confirmed via
+\texttt{gh api} directory listing and reading \texttt{rf-nowcasting-methodology.md}
+in full) are established here.}
 
 \subsection{Data versioning}
 

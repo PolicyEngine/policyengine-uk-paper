@@ -138,11 +138,64 @@ exits, so treat every push as possibly the last action this session takes.
    describe it accurately (external RF-methodology reference, not
    PolicyEngine's own), re-pointed the "PolicyEngine's own detailed
    methodology" claim to growthfactors.md.
-5. Added CONTRIBUTING.md (evidence rule + guardian-claims section,
+5. data.tex: corrected a `\todo{}`'s guidance on the earliest
+   verified_start_year (was 2019, actually 2013).
+6. Added CONTRIBUTING.md (evidence rule + guardian-claims section,
    UK-specific content) mirroring the merged US sibling's structure.
-6. Added docs/pending-citations.md (UKMOD/EUROMOD country report,
+7. Added docs/pending-citations.md (UKMOD/EUROMOD country report,
    HBAI statistics release, SPI statistics release -- the three
    pseudo-bibliography items already flagged in references.bib's comment).
+8. README.md: neutrality-reviewer flag -- reworded an unbenchmarked
+   "serious model" value judgment to a neutral factual statement.
+9. introduction.tex: neutrality-reviewer flag -- tightened a `\todo{}` to
+   warn against converting PolicyEngine's own publication timeline into an
+   implicit UKMOD comparison during full-prose drafting.
+10. README.md: added a Layout section (mirrors US sibling), pointing to
+    CONTRIBUTING.md, docs/pending-citations.md, PLAN.md, tests/.
+
+All fixes independently re-verified: `uv run pytest` (5/5), `uv run ruff
+check .` (clean), `quarto render --to html` and `--to pdf` (both clean, no
+LaTeX/BibTeX errors, 14pp PDF) after every substantive edit, not just once
+at the end. Ran `3.23.0:shared:neutrality-reviewer` agent: **pass**, zero
+violations (see above).
+
+- Ran `3.23.0:shared:neutrality-reviewer` agent (sonnet) against all
+  section files + new CONTRIBUTING.md + README.md + PLAN.md. **Verdict:
+  pass** at the `tier:standard` bar. Zero real violations found (no
+  unbenchmarked superlatives, no editorializing about UKMOD/EUROMOD's own
+  methodology, no one-sided validation reporting -- every caveat set up in
+  one place is honored elsewhere, e.g. the "Official" column not being
+  independent is stated at first use in validation.tex AND repeated in
+  discussion.tex, not diluted on second mention). Two low-cost improvements
+  applied from its findings:
+  1. README.md: reworded "Every serious model has this citation... does
+     not yet" (an unbenchmarked "serious" value judgment) to the neutral
+     "EUROMOD... and TAXSIM... each have a standard citable methods paper;
+     PolicyEngine UK does not yet" -- same fact, no evaluative adjective.
+  2. introduction.tex: tightened the `\todo{}` instructing the future
+     drafter of the UKMOD-situating paragraph, explicitly warning against
+     converting PolicyEngine's own citable-paper timeline into an implicit
+     comparison with UKMOD's longer one (the reviewer's single
+     highest-risk-during-full-drafting item).
+
+- Additional independent verification beyond the four fixed errors above
+  (all PASSED, no further errors found):
+  - SPI validation.ipynb fetched and read in full: composite-records
+    exclusion (1,770 records, ~0.2%), the four match-rate bands (92.7% /
+    93.5% / 98.3% / 1.7%), and all four discrepancy-cluster figures
+    (Marriage Allowance 4.8%/37,998 records; non-resident Personal
+    Allowance 0.3%/2,054; Other Investment Income 0.2%/1,276; Gift Aid
+    0.1%/738) all match validation.tex's Table 2 and prose exactly.
+  - Confirmed validation.ipynb exists, is a real 2-cell notebook building
+    a `policyengine_uk.Microsimulation` and a `UKMOD_CASELOADS` dict
+    sourced to "the 2020-26 UKMOD country report" -- matches validation.tex's
+    description of the notebook's method and citation.
+  - Found (lower severity, inside a `\todo{}` instruction rather than
+    asserted prose): data.tex's TODO said the earliest
+    `verified_start_year` across programs.yaml is 2019 -- actual earliest
+    is 2013 (`council_tax_reduction`, the same newly-added program behind
+    the Table 1 fix). **Fixed**: corrected the TODO's guidance so whoever
+    resolves it next isn't misled.
 
 ## Open questions for the lead (surfaced, not resolved by me)
 

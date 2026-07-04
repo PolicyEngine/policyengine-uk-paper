@@ -1,0 +1,105 @@
+\section{Model}
+\label{sec:model}
+
+\policyengine{} UK runs on \texttt{policyengine\_core}, a fork of
+OpenFisca-Core, which evaluates a directed graph of parameterized formulas
+over person, benefit unit, and household entities. \todo{One paragraph on the
+engine's evaluation model (entities, periods, formula/parameter separation),
+citing policyengine\_core documentation or the sibling policyengine-core
+paper if one exists by the time this section is drafted.}
+
+\subsection{Program coverage}
+\label{sec:model-coverage}
+
+Table~\ref{tab:program-coverage} lists the programs \policyengine{} UK
+models, drawn from the model's own coverage registry,
+\texttt{policyengine\_uk/programs.yaml}, which is the single source of truth
+served by the \texttt{/uk/metadata} API and rendered on the public model
+coverage page. As of this writing (2026-07-04), the registry lists
+\textbf{45} programs: \textbf{38} at \texttt{status: complete} and
+\textbf{7} at \texttt{status: partial}, spanning \dwp{} (17, all complete:
+including Universal Credit, Pension Credit, Housing Benefit, and Personal
+Independence Payment), \hmrc{} (12, 11 complete and 1 partial: including
+income tax, National Insurance, Child Benefit, Capital Gains Tax, Stamp
+Duty Land Tax, VAT, fuel duty, and student loan repayments), the Department
+for Education (9, 3 complete and 6 partial), plus single-agency coverage
+for Revenue Scotland (2, complete), and one program each (all complete) for
+DCMS, Local (council tax/business rates administration), Treasury, Ofgem,
+and Social Security Scotland.
+
+\begin{table}[H]
+    \centering
+    \caption{Program coverage by agency (source:
+    \texttt{policyengine\_uk/programs.yaml}, verified 2026-07-04)}
+    \label{tab:program-coverage}
+    \tablefont
+    \begin{tabular}{lccc}
+        \toprule
+        Agency & Programs & Complete & Partial \\
+        \midrule
+        \dwp{} & 17 & 17 & 0 \\
+        \hmrc{} & 12 & 11 & 1 \\
+        DfE & 9 & 3 & 6 \\
+        Revenue Scotland & 2 & 2 & 0 \\
+        DCMS & 1 & 1 & 0 \\
+        Local & 1 & 1 & 0 \\
+        Treasury & 1 & 1 & 0 \\
+        Ofgem & 1 & 1 & 0 \\
+        Social Security Scotland & 1 & 1 & 0 \\
+        \midrule
+        Total & 45 & 38 & 7 \\
+        \bottomrule
+    \end{tabular}
+    \tablenote{Counts of programs per agency and status verified directly
+    from \texttt{policyengine\_uk/programs.yaml} by parsing every
+    \texttt{agency}/\texttt{status} pair (45 total entries; agency
+    subtotals cross-checked against independent grep counts of
+    \texttt{status: complete} (38) and \texttt{status: partial} (7)).
+    Agency string is exactly \texttt{Treasury} in the source file, not
+    ``HM Treasury''.}
+\end{table}
+
+Of the 7 \texttt{status: partial} programs, 1 is at \hmrc{}
+(\texttt{business\_rates}, whose note reads: ``Free hours for
+disadvantaged 2-year-olds and, since April 2024, working families with
+younger children'' -- \todo{this note reads as though it was copied from a
+different program's entry; re-check against the live file before quoting
+it in prose, since it does not obviously describe business rates}) and 6
+are at DfE, all English student-support programs modelled as ``first-pass''
+implementations per their \texttt{notes} fields: the Childcare Grant,
+Parents' Learning Allowance, Adult Dependants' Grant, Travel Grant,
+Disabled Students' Allowance, and the 16 to 19 Bursary Fund. Each note
+specifies a concrete simplifying assumption -- e.g. the Childcare Grant note
+states it uses ``explicit full-time, SEN, and childcare-support inputs plus
+maintenance-loan proxies''; the Travel Grant note states the survey does
+not observe reimbursable travel costs, so the model requires explicit
+placement and eligible-expense inputs instead. \todo{Quote or summarize the
+remaining partial-program notes (Parents' Learning Allowance, Adult
+Dependants' Grant, Disabled Students' Allowance, 16 to 19 Bursary Fund) in
+full once this subsection is drafted in prose -- verified to exist in the
+source file as of 2026-07-04 but not all reproduced here.}
+
+\subsection{Devolved and regional variation}
+
+\policyengine{} UK models devolved tax and benefit variation where the
+underlying legislation devolves it: Scottish income tax bands (via
+\texttt{income\_tax}'s \texttt{parameter\_prefix: gov.hmrc.income\_tax},
+noted as including ``Scottish rates via devolved tax bands''), Land and
+Buildings Transaction Tax (Revenue Scotland) and Land Transaction Tax (Welsh
+Revenue Authority) in place of Stamp Duty Land Tax, and Scottish-specific
+benefits (Scottish Child Payment, Scottish Carer's Allowance Supplement,
+Scottish Child Winter Heating Assistance) that also appear as distinct line
+items in the \ukmod{} comparison in Section~\ref{sec:validation-ukmod}.
+\todo{Confirm Northern Ireland coverage explicitly -- programs.yaml
+coverage fields say ``UK'', ``Great Britain'', or ``England and Northern
+Ireland'' per program; state which programs exclude Northern Ireland and
+why.}
+
+\subsection{Known coverage gaps}
+
+\todo{Enumerate known gaps as of v1: e.g. any programs not yet in
+programs.yaml at all (rather than partial), indirect tax effects of reforms
+(tracked as an open documentation item, policyengine-uk\#1114/\#1119), and
+any other gaps identified by the model coverage page or open GitHub issues
+tagged as scope limitations. This subsection should be exhaustive and
+specific -- it is the section reviewers and users will check most closely.}

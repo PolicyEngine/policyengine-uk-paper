@@ -1,0 +1,57 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Limitations}
+
+\todo{Synthesize limitations surfaced across Sections~\ref{sec:model}
+(partial-status programs and their specific gaps),
+\ref{sec:data} (the \efrs{} construction is itself a modelled input, not an
+observed one, for the synthetic high-income rows), and
+\ref{sec:validation} (the two named-but-unassembled validation types:
+ready reckoners and HBAI distributional statistics; the weaker
+individual-level fit for student loan repayments; and the fact that the
+\ukmod{} comparison in \ref{sec:validation-ukmod} compares against
+\policyengine{}'s own calibration target for the ``Official'' series, not
+an independent one, for the aggregate figures -- only the \ukmod{} column
+is a genuinely external comparator there). State each limitation plainly
+rather than burying it, consistent with the paper's stated policy-neutral,
+facts-only tone.}
+
+\subsection{Relationship to \ukmod{} and \euromod{}}
+
+\policyengine{} UK and \ukmod{} are independently developed, open models of
+overlapping scope; both descend from a broader European tradition of
+survey-based tax-benefit microsimulation established by \euromod{}
+\citep{sutherland2013euromod}. This paper's validation-comparative sections
+report where the two models' calculated aggregates agree or differ from
+published or cited figures; \todo{add a sentence noting any structural
+differences in scope or approach that are already publicly documented (e.g.
+policyengine-uk\#300's list of differences, if that issue's content has been
+resolved into a citable public document) -- do not introduce new
+comparative claims not already public.} Consistent with the collegial
+framing required for this paper, this section makes no claim about which
+model is preferable for a given use case beyond what a reader can verify
+from the cited figures themselves.
+
+\subsection{Reproducibility}
+
+\todo{State how a reader can reproduce every table in this paper: which
+\texttt{policyengine-uk} and \texttt{populace} commits/tags were used, and
+whether (following the sibling imputation paper's disclosure convention)
+this paper's own repository contains scripts that regenerate each table
+from those pinned versions, or whether tables are transcribed by hand from
+notebook output with a stated commit reference. The imputation-paper
+precedent regenerates every table from committed run configurations; decide
+whether this paper's validation notebooks (currently living in
+policyengine-uk, not in this paper's own repo) should be re-run by CI here,
+mirrored into this repo, or cited by pinned commit only, and record that
+decision.}
+
+\subsection{Future versions}
+
+\todo{Note known near-term changes that would trigger a v2 per the
+versioning framing in Section~\ref{sec:introduction} (e.g. a
+\texttt{policyengine\_core} engine migration, or the Axiom rules-encoding
+migration referenced in the wider PolicyEngine program, if and when it
+reaches policyengine-uk) -- state only changes that are already planned and
+documented elsewhere, not speculative ones.}

@@ -1,0 +1,95 @@
+\section{Data}
+\label{sec:data}
+
+\policyengine{} UK's microsimulation runs on an enhanced version of the
+Family Resources Survey (\frs{}), constructed and calibrated by
+\populace{}, \policyengine{}'s open-source population data stack. This
+section documents the base survey, the enhancement pipeline, and the
+calibration procedure, citing the \populace{} build code that implements
+each step. \todo{Confirm this section's framing is consistent with however
+\populace{}'s own model/data paper (if drafted concurrently, per the
+imputation-paper and populace-be-microsim threads in the wider publication
+program) describes the same pipeline, to avoid the two papers diverging on
+the same facts.}
+
+\subsection{Base survey: the Family Resources Survey}
+
+The \frs{} is \dwp{}'s annual household survey of income, benefit receipt,
+and demographic characteristics, produced for HBAI and other official
+statistics. \todo{Standard FRS citation (DWP/ONS or UK Data Service), sample
+size, and years currently supported by policyengine-uk -- confirm supported
+years from policyengine\_uk/programs.yaml's verified\_start\_year fields
+(earliest is 2019) and any dataset-loading code, not from memory.}
+
+\subsection{Enhancement: SPI-informed synthetic high-income records}
+\label{sec:data-efrs}
+
+The \frs{} undersamples high incomes relative to \hmrc{}'s Survey of
+Personal Incomes (\spi{}), a limitation shared by household surveys
+generally. \populace{}'s UK build pipeline addresses this with an
+``enhanced FRS'' (\efrs{}) construction documented in
+\texttt{populace/packages/populace-build/src/populace/build/uk\_runtime/spi\_support.py}:
+a zero-weight copy of the \frs{} is created and filled with \spi{}-trained
+quantile-regression-forest income imputations (employment income,
+self-employment income, savings interest, dividends, private pension
+income, property income, plus Gift Aid and qualifying investment gifts),
+and calibration (Section~\ref{sec:data-calibration}) is left free to
+upweight these synthetic high-income rows where doing so improves fit to
+\spi{} totals. A second imputation stage fills FRS-only fields (pension
+contributions, tax-free savings income, Universal Credit receipt, and
+others) on the synthetic rows so they do not inherit an FRS donor's
+unrelated benefit or pension profile. \todo{Cite the specific QRF
+specification (predictor set, training target) once confirmed against the
+\texttt{populace-fit} code the sibling imputation paper documents -- this
+section should point to that paper's methodology rather than re-derive it,
+per PolicyEngine's stated preference to keep this description a summary of
+what is proven elsewhere.}
+
+The individual-level accuracy of this SPI-informed approach against SPI-
+reported income tax liabilities is validated directly in
+Section~\ref{sec:validation-spi}.
+
+\subsection{Calibration}
+\label{sec:data-calibration}
+
+\policyengine{} UK's data is calibrated -- reweighted to match a set of
+administrative and forecast targets -- via \populace{}'s calibration
+package (\texttt{populace.calibrate}, formerly a
+\texttt{policyengine\_uk.data.datasets.frs.calibration.loss} module
+referenced in the model's validation notebook; that historical import path
+had already been superseded by the \populace{} migration as of this
+writing, and this section should cite the current location precisely once a
+canonical target list is agreed). Calibration targets are defined in
+\texttt{populace/packages/populace-build/src/populace/build/uk\_runtime/local\_targets.py}
+and include, at minimum, the aggregate income tax liability implied by
+official \obr{} costings (the loss module referenced program-level budgetary
+impact parameters such as
+\texttt{programs.income\_tax.budgetary\_impact.by\_country.UNITED\_KINGDOM}).
+\todo{Enumerate the full current target list (which programs, which
+geography levels -- the local\_targets.py module also supports local-area
+row-wise geography per the UK local-area build tests) and the calibration
+method (the populace README describes \texttt{populace-calibrate} as
+supporting APG and L0-regularized approaches; confirm which the UK build
+uses in production).}
+
+\subsection{Nowcasting and uprating}
+
+Direct input variables (employment income, benefit receipt, rents, council
+tax, etc.) are uprated from the survey's collection year to the simulation
+year using \obr{} economic indices, documented in the model's HBAI mapping
+page (\texttt{docs/book/validation/hbai.md}), which tabulates the specific
+uprating index used for every income, subtraction, and housing-cost
+component in the \hbai{} income definition (e.g. \texttt{employment\_income}
+uprated on \texttt{gov.obr.per\_capita.employment\_income}; rents uprated on
+outturn regional data through 2025 and \obr{} aggregate rent forecasts
+thereafter). A more detailed rent- and council-tax-nowcasting methodology is
+documented separately (\texttt{docs/book/assumptions/rf-nowcasting-methodology.md},
+\todo{summarize once read in full -- not yet reviewed for this outline}).
+
+\subsection{Data versioning}
+
+\todo{State the currently certified \populace{} bundle version for the UK
+build (per internal tracking, certified defaults were "4.18.7 (dense)" for
+both US and UK as of early July 2026 -- verify this is still current and
+cite the populace release/tag directly rather than an internal memory note,
+since this paper must cite public, checkable artifacts).}

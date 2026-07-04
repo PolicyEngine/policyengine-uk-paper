@@ -1,0 +1,165 @@
+\section{Validation}
+\label{sec:validation}
+
+We validate \policyengine{} UK against three independent sources, each
+targeting a different level of aggregation: population-level aggregates
+against an independent microsimulation model and official administrative/
+forecast figures (Section~\ref{sec:validation-ukmod}); individual-level tax
+liabilities against \hmrc{} administrative microdata
+(Section~\ref{sec:validation-spi}); and a further individual-level check on
+a specific, harder-to-model program (Section~\ref{sec:validation-other}).
+Every figure quoted in this section is drawn from a committed,
+version-controlled source in \texttt{policyengine-uk} or \texttt{populace};
+none is recomputed for this paper. Where a number needs to be refreshed
+against the model's current state before submission, it is marked
+\todo{example}.
+
+\subsection{Aggregate validation: \ukmod{} and administrative outturns}
+\label{sec:validation-ukmod}
+
+\texttt{docs/book/validation/validation.ipynb} in \texttt{policyengine-uk}
+runs a three-way comparison -- \policyengine{}, \ukmod{}, and an official
+target -- for major tax and benefit programs across 2023--2025: income tax,
+National Insurance (employee, self-employed, and employer contributions
+combined), Universal Credit, Child Benefit, Tax Credits, Housing Benefit,
+and Pension Credit. \ukmod{} figures are transcribed from the ``2020-26
+UKMOD country report'' (cited in-notebook; \todo{resolve to a full, citable
+reference -- ISER/EUROMOD country report series, exact edition and year}).
+The ``Official'' series is \policyengine{}'s own calibration target,
+sourced from \obr{}/\hmrc{}/\dwp{} budgetary-impact parameters (e.g.
+\texttt{programs.income\_tax.budgetary\_impact.by\_country.UNITED\_KINGDOM}
+for income tax; the equivalent \texttt{total\_NI}, \texttt{universal\_credit},
+\texttt{child\_benefit}, \texttt{tax\_credits}, \texttt{housing\_benefit}, and
+\texttt{pension\_credit} parameters for the other programs), i.e. it
+represents the administrative/forecast aggregate the model is calibrated
+to, not an independent third-party figure -- this distinction should be
+stated plainly in the drafted prose so the comparison is not misread as
+\policyengine{} vs.\ two independent externals.
+
+This notebook has a maintained history: it was most recently updated for a
+new \ukmod{} country report in policyengine-uk\#724 (``Update validation
+page for new UKMOD country report''), and earlier issues
+(policyengine-uk\#300, ``List differences against UKMOD in documentation'';
+\#212, ``Validate employer NI reform against UKMOD report''; \#545,
+``Generate a UKMOD input dataset'') document the comparison's development
+history. \todo{Re-run the notebook against the current model version before
+the paper drafts numeric claims -- the notebook's own import of
+\texttt{policyengine\_uk.data.datasets.frs.calibration.loss} no longer
+resolves against the current \texttt{policyengine-uk} tree (calibration
+code has moved into \texttt{populace.calibrate}), so it must be updated to
+run before its output can be cited with specific figures in prose. This
+outline cites the notebook's existence, method, and program coverage, which
+are independently verifiable by reading its source; it does not assert
+specific match percentages or error magnitudes that would require rerunning
+it.}
+
+Public framing constraint (per issue scope): this comparison is descriptive
+and validation-comparative only. It reports where \policyengine{}, \ukmod{},
+and the official target agree or disagree on point estimates, with no
+characterization of which model is ``more correct'' beyond distance from
+the cited official figure, and no commentary on \ukmod{} or \euromod{}
+beyond their own published numbers.
+
+\subsection{Individual-level validation: the Survey of Personal Incomes}
+\label{sec:validation-spi}
+
+\texttt{docs/book/validation/spi-validation.ipynb} validates
+\policyengine{} UK's calculated individual income tax liability against
+\hmrc{}'s \spi{} 2020/21 microdata, using \spi{} input variables as direct
+inputs to household-level \policyengine{} simulations (excluding the
+\spi{}'s 1,770 ``composite records,'' about 0.2\% of the file, which
+represent population aggregates rather than individuals and cannot be
+compared this way). Matches are logarithmically banded by absolute error,
+with values within \pounds{}10 treated as matches (attributed to rounding).
+The notebook reports:
+
+\begin{table}[H]
+    \centering
+    \caption{PolicyEngine UK vs.\ SPI 2020/21: income tax match rate
+    (source: \texttt{docs/book/validation/spi-validation.ipynb})}
+    \label{tab:spi-match}
+    \tablefont
+    \begin{tabular}{lc}
+        \toprule
+        Total error & Share of records \\
+        \midrule
+        $\leq$\pounds{}10 & 92.7\% \\
+        $<$\pounds{}100 & 93.5\% \\
+        $<$\pounds{}1{,}000 & 98.3\% \\
+        $\geq$\pounds{}1{,}000 & 1.7\% \\
+        \bottomrule
+    \end{tabular}
+    \tablenote{Cumulative bands as reported in the notebook (i.e. rows are
+    not mutually exclusive: ``$<$\pounds{}100'' includes the
+    ``$\leq$\pounds{}10'' records). \todo{Confirm cumulative vs.\ exclusive
+    banding before reproducing this table in prose -- the source markdown
+    table's rows sum to more than 100\% read literally, consistent with a
+    cumulative reading, but this should be verified against the underlying
+    code rather than assumed.}}
+\end{table}
+
+The notebook attributes the residual 6.5\% (records with error $\geq
+\pounds{}100$) to four identified discrepancy clusters, each with an
+estimated record share: Marriage Allowance transfer bookkeeping (up to
+4.8\% of records), non-resident Personal Allowance treatment (0.3\%), an
+``Other Investment Income'' savings-income tax discrepancy (0.2\%), and
+Gift Aid interaction with the Personal Allowance taper (0.1\%). This
+validation is referenced in the notebook itself as building on an earlier
+public writeup, \policyengine{}'s ``Autumn 2023 model calibration''
+(\url{https://policyengine.org/uk/research/uk-calibration-2023-q4},
+confirmed live). \todo{This validation uses \spi{} 2020/21 -- the most
+recent vintage available at time of writing per the notebook's own citation
+to the \spi{} statistics release. Confirm whether a newer \spi{} vintage has
+since been released and, if so, whether to note that this validation
+predates it or to rerun against the newer vintage before submission.}
+
+\subsection{Other individual-level checks: student loan repayments}
+\label{sec:validation-other}
+
+\texttt{docs/book/validation/student-loan-repayments.ipynb} compares
+\frs{}-\emph{reported} student loan repayments against \policyengine{}'s
+\emph{modelled} repayments (calculated from income and loan-plan type under
+the Plan 1/2/4/5 and Postgraduate repayment thresholds). Unlike the \spi{}
+comparison, this is a within-\frs{} check (reported vs.\ modelled on the
+same records) rather than a cross-dataset one. The notebook finds aggregate
+totals ``reasonably aligned'' but individual-level correlation
+``lower than for income tax calculations,'' attributed to five factors:
+within-year employment/income variation not captured by an annual model,
+multiple concurrent loan plans, current-student repayment patterns, and
+loan-plan misclassification in the imputed microdata. \todo{Extract and cite
+the specific correlation coefficient, aggregate ratio, and match-rate
+figures the notebook computes (it defines \texttt{correlation},
+\texttt{total\_reported}, \texttt{total\_modelled}, and \texttt{match\_rate}
+variables) -- rerun the notebook to get current values rather than
+transcribing stale ones, since (like Section~\ref{sec:validation-ukmod}) its
+numeric outputs are not cached in this outline.}
+
+This is presented as a validation of a harder, more idiosyncratic program
+rather than a headline result: the paper should be explicit that this
+program's individual-level fit is weaker than income tax's, consistent with
+the model's own documentation of that finding, rather than presenting only
+favorable comparisons.
+
+\subsection{Validation not yet assembled}
+
+\todo{The issue scope also names ``HMRC/DWP ready reckoners'' as a target
+validation source, distinct from the budgetary-impact calibration
+parameters already covered in Section~\ref{sec:validation-ukmod}. A ready
+reckoner (e.g. HMRC's ``Direct effects of illustrative tax changes'' or
+DWP's benefit expenditure tables) gives the marginal fiscal effect of a
+specific parameter change, which is a distinct and currently-unassembled
+validation target: comparing \policyengine{}'s reform-costing output against
+a published ready-reckoner line item for the same parameter change. No such
+comparison was found in the policyengine-uk or populace repositories during
+this survey (2026-07-04); this is a genuine evidence gap, not an
+oversight in this outline, and should be either assembled before v1
+circulates or explicitly scoped out with a stated reason.}
+
+\todo{HBAI-level distributional validation (poverty rates, income deciles)
+against DWP's own published HBAI statistics is a natural complement to the
+program-level aggregate validation in Section~\ref{sec:validation-ukmod} --
+the model's HBAI income-concept mapping (\texttt{docs/book/validation/hbai.md})
+establishes that the necessary variables exist, but no notebook comparing
+\policyengine{}-calculated HBAI poverty/income statistics against DWP's
+published HBAI statistics was found. State whether this is in scope for v1
+or deferred.}

@@ -1,0 +1,81 @@
+% References for "PolicyEngine UK: a tax-benefit microsimulation model, v1".
+%
+% sutherland2013euromod, bourguignon2006microsimulation, and populace2026 are
+% copied verbatim from the sibling imputation-paper's bibliography
+% (PolicyEngine/imputation-paper) to keep shared citations consistent across
+% the publication program. All other entries are added for this paper; each
+% is a citation the drafting author is confident of from public knowledge.
+% Anything added on lower confidence carries a TODO comment and should be
+% verified (author names, volume/issue/pages) against the primary source
+% before submission -- do not trust page/volume numbers transcribed from
+% memory without checking.
+
+@article{sutherland2013euromod,
+  title     = {{EUROMOD}: The {European Union} tax-benefit microsimulation model},
+  author    = {Sutherland, Holly and Figari, Francesco},
+  journal   = {International Journal of Microsimulation},
+  volume    = {6},
+  number    = {1},
+  pages     = {4--26},
+  year      = {2013}
+}
+
+@article{bourguignon2006microsimulation,
+  title   = {Microsimulation as a tool for evaluating redistribution policies},
+  author  = {Bourguignon, Fran{\c{c}}ois and Spadaro, Amedeo},
+  journal = {Journal of Economic Inequality},
+  volume  = {4},
+  number  = {1},
+  pages   = {77--106},
+  year    = {2006},
+  publisher = {Springer}
+}
+
+% TODO: verify volume/issue/pages against the primary source before
+% submission -- transcribed from general knowledge of the TAXSIM citation
+% lineage, not re-checked against the original 1993 JPAM issue.
+@article{feenberg1993taxsim,
+  title   = {An introduction to the {TAXSIM} model},
+  author  = {Feenberg, Daniel and Coutts, Elisabeth},
+  journal = {Journal of Policy Analysis and Management},
+  volume  = {12},
+  number  = {1},
+  pages   = {189--194},
+  year    = {1993}
+}
+
+@misc{populace2026,
+  title  = {Populace: A Microsimulation Dataset Construction Pipeline},
+  author = {{PolicyEngine}},
+  year   = {2026},
+  note   = {Software},
+  url    = {https://github.com/PolicyEngine/populace}
+}
+
+@misc{policyengine_uk_software,
+  title  = {PolicyEngine {UK}},
+  author = {{PolicyEngine}},
+  year   = {2026},
+  url    = {https://github.com/PolicyEngine/policyengine-uk},
+  note   = {Open-source tax-benefit microsimulation model for the United Kingdom}
+}
+
+% NOTE(evidence needed): three administrative-source citations are not yet
+% formal BibTeX entries -- adding them as commented-out pseudo-entries here
+% previously broke BibTeX's parsing (it scans for the at-sign entry marker
+% even inside a percent-comment line, and unbalanced braces/parens desync
+% its brace matching too), so they are listed in prose instead, with no
+% at-sign anywhere in this note. Add each as a proper techreport-type entry,
+% with balanced braces, before it is cited in rendered text.
+%
+% 1. The UKMOD or EUROMOD country report referenced in-notebook as the
+%    2020-26 UKMOD country report, docs slash book slash validation slash
+%    validation dot ipynb in policyengine-uk. ISER publishes country
+%    reports annually; find the exact year, edition, and any DOI or report
+%    number.
+% 2. The DWP Households Below Average Income statistics release cited in
+%    docs slash book slash validation slash hbai dot md in policyengine-uk
+%    (financial years ending 1995 to 2024 edition).
+% 3. The HMRC Survey of Personal Incomes statistics release for tax year
+%    2020 to 2021, cited in docs slash book slash validation slash
+%    spi-validation dot ipynb in policyengine-uk.

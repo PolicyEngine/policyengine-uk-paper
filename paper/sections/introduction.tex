@@ -1,0 +1,73 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Tax-benefit microsimulation models let researchers and policymakers evaluate
+the distributional and fiscal effects of policy changes before they are
+enacted, by applying rules to representative individual- or household-level
+records rather than to aggregates \citep{bourguignon2006microsimulation}. In
+the United Kingdom, the incumbent academic model is \ukmod{}, itself the UK
+country instance of \euromod{}, the tax-benefit model of the European
+Union \citep{sutherland2013euromod}. \ukmod{} and \euromod{} are documented
+in a well-established citation lineage that this paper's structure follows;
+so is \textsc{TAXSIM}, the equivalent US individual income tax calculator
+\citep{feenberg1993taxsim}. \policyengine{} UK
+(\texttt{\href{https://github.com/PolicyEngine/policyengine-uk}{policyengine-uk}})
+is an open-source model of the full UK personal tax and benefit system that
+has operated as a public, continuously deployed tool since \todo{launch year
+-- confirm from repository history or an early release/announcement} but has
+not until now had a citable, versioned description of its scope, data
+construction, and validation. This paper is that description.
+
+\todo{One paragraph situating \policyengine{} UK relative to \ukmod{} and
+official HMRC/DWP costing tools (e.g. IPPR tax-benefit model, if a citable
+comparison exists) -- strictly factual, no claims beyond what is
+independently verifiable, per the neutral-framing requirement on this paper
+(PolicyEngine/policyengine-uk-paper\#1). This paragraph should describe
+what \policyengine{} UK models and cites (scope, coverage, data sources);
+it should not frame \ukmod{}'s longer citation history as reflecting
+better or worse on either model -- the preceding paragraph's citable-paper
+timeline is a fact about \policyengine{} UK's own publication history, not
+a comparative claim, and this paragraph should not convert it into one.}
+
+\subsection{Versioning}
+
+Software-backed microsimulation models change continuously: parameters are
+uprated annually, new programs are added, and the underlying simulation
+engine is occasionally replaced. A paper that describes ``the model'' at a
+single point in time becomes silently inaccurate as the software evolves.
+Following the versioning framing used for the sibling paper on
+\populace{}'s imputation operator \citep{populace2026}, this paper is
+explicitly versioned: \textbf{v1} documents \policyengine{} UK as deployed in
+2026, on the \texttt{policyengine\_core} engine and the \populace{} data
+stack described in Section~\ref{sec:data}. A future migration of the
+underlying engine or a substantial change in data construction will produce a
+v2 revision of this paper rather than retroactively invalidating this one.
+
+\subsection{Scope and contributions}
+
+This paper:
+
+\begin{enumerate}
+    \item Documents the tax and benefit programs \policyengine{} UK models,
+    their administrative sourcing, and known coverage gaps
+    (Section~\ref{sec:model}).
+    \item Documents the survey microdata the model runs on -- the \frs{},
+    its enhancement with \hmrc{} \spi{} income data, and calibration to
+    administrative totals -- and the versioned data pipeline that produces
+    it (Section~\ref{sec:data}).
+    \item Validates modelled aggregates against an independent
+    microsimulation model (\ukmod{}) and official administrative and
+    forecast aggregates (\hmrc{}, \dwp{}, \obr{}), and validates
+    individual-level calculations against \hmrc{}'s \spi{} microdata
+    (Section~\ref{sec:validation}).
+    \item States what is not yet validated and where the model's coverage is
+    partial, so that users can assess fitness for a given application
+    (Section~\ref{sec:discussion}).
+\end{enumerate}
+
+Consistent with the scope of this v1, we do not report new simulation
+results: every quantity in Section~\ref{sec:validation} is drawn from an
+existing, committed validation artifact in the \texttt{policyengine-uk} or
+\texttt{populace} repositories, cited to its source file. Where a claim in
+this outline does not yet have a cited source, it is marked
+\todo{example placeholder}.

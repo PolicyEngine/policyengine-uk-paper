@@ -1,0 +1,46 @@
+---
+title-meta: "PolicyEngine UK: a tax-benefit microsimulation model, v1"
+author-meta: "Max Ghenis"
+date: ""
+bibliography: bibliography/references.bib
+format:
+  html:
+    cite-method: citeproc
+    link-citations: true
+    link-bibliography: true
+  pdf:
+    documentclass: article
+    classoption: 11pt
+    pdf-engine: pdflatex
+    cite-method: natbib
+    biblio-style: plainnat
+    include-in-header:
+      - preamble.tex
+    keep-tex: true
+number-sections: true
+---
+
+<!-- v1 outline (PolicyEngine/policyengine-uk-paper#1). Section files are
+stubs: each one states what the section will claim and cites the evidence
+that already exists for it, or is marked \todo{} where no such evidence has
+been found yet. No results, figures, or numbers in this PR are fabricated;
+every number that appears is copied from a cited, committed source. Author
+list, order, and affiliations are TBD -- see disclosures.tex. -->
+
+\title{PolicyEngine UK: a tax-benefit microsimulation model, v1}
+
+\author{
+    Max Ghenis\thanks{PolicyEngine. Corresponding author: max@policyengine.org}
+}
+\date{}
+
+\maketitle
+
+\input{sections/abstract}
+\input{sections/introduction}
+\input{sections/model}
+\input{sections/data}
+\input{sections/validation}
+\input{sections/discussion}
+\input{sections/conclusion}
+\input{sections/disclosures}

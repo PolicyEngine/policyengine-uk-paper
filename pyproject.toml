@@ -1,0 +1,30 @@
+[project]
+name = "policyengine-uk-paper"
+version = "0.1.0"
+description = "The canonical, versioned model paper for PolicyEngine UK"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff>=0.8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B"]
+ignore = ["E501"]
+
+# No installable package yet: v1 is outline + evidence mapping (no
+# experiment code), so there is nothing under src/ to build a wheel from.
+# Add a [build-system] + hatch wheel target if a later milestone adds
+# regeneration scripts (mirroring imputation-paper's src/imputation_paper).

@@ -1,0 +1,29 @@
+\section*{Abstract}
+
+\policyengine{} UK is an open-source tax-benefit microsimulation model
+covering \todo{count of modelled programs, e.g. from policyengine\_uk/programs.yaml (38 complete + 7 partial as of 2026-07-04)}
+UK personal tax and benefit programs, built on the Family Resources Survey
+(\frs{}) and validated against \ukmod{}, \hmrc{} and \dwp{} administrative
+outturns, and the Survey of Personal Incomes (\spi{}). \euromod{}'s
+Sutherland--Figari (2013) paper and \textsc{TAXSIM}'s Feenberg--Coutts (1993)
+paper are the standard citations for those models; this paper is the
+equivalent for \policyengine{} UK. It is \emph{versioned}: this version (v1)
+documents the model as deployed in 2026, so that later engine migrations
+produce a v2 rather than invalidating this description. We describe the
+model's rules coverage and data construction (Section~\ref{sec:model},
+Section~\ref{sec:data}), then validate calculated aggregates and
+individual-level income tax liabilities against three independent sources:
+a \ukmod{} cross-run and \hmrc{}/\dwp{}/\obr{} administrative and
+official-forecast aggregates for major tax and benefit programs
+(Section~\ref{sec:validation-ukmod}); \hmrc{}'s \spi{} 2020/21 individual
+records, where \todo{restate the SPI match rate here once re-verified against
+the current model version, citing the source notebook} of records match the
+\spi{}'s reported income tax liability within \pounds{}10
+(Section~\ref{sec:validation-spi}); and \frs{}-reported student loan
+repayments against modelled repayments (Section~\ref{sec:validation-other}).
+\todo{One-sentence summary of what the validation results collectively show,
+once section~\ref{sec:validation} is written.}
+
+\vspace{1em}
+\noindent\textbf{Keywords:} microsimulation, tax-benefit model, United
+Kingdom, model validation, survey microdata

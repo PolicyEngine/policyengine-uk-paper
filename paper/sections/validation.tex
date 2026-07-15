@@ -8,11 +8,17 @@ forecast figures (Section~\ref{sec:validation-ukmod}); individual-level tax
 liabilities against \hmrc{} administrative microdata
 (Section~\ref{sec:validation-spi}); and a further individual-level check on
 a specific, harder-to-model program (Section~\ref{sec:validation-other}).
-Every figure quoted in this section is drawn from a committed,
-version-controlled source in \texttt{policyengine-uk} or \texttt{populace};
-none is recomputed for this paper. Where a number needs to be refreshed
-against the model's current state before submission, it is marked
-\todo{example}.
+Two further subsections document validation of the \emph{data} rather than
+the model: the adjudicated comparison under which the current default
+dataset replaced its predecessor
+(Section~\ref{sec:validation-promotion}), and a fenced replay register
+against \hmrc{}'s published personal-income distribution tables
+(Section~\ref{sec:validation-hmrc-replay}). Every figure quoted in this
+section is drawn from a committed, version-controlled source in
+\texttt{policyengine-uk} or \texttt{populace}, or from a cited GitHub
+record on a \policyengine{} repository's issue tracker; none is recomputed
+for this paper. Where a number needs to be refreshed against the model's
+current state before submission, it is marked \todo{example}.
 
 \subsection{Aggregate validation: \ukmod{} and administrative outturns}
 \label{sec:validation-ukmod}
@@ -140,6 +146,106 @@ program's individual-level fit is weaker than income tax's, consistent with
 the model's own documentation of that finding, rather than presenting only
 favorable comparisons.
 
+\subsection{Data-level validation: promotion of the default dataset}
+\label{sec:validation-promotion}
+
+The dataset the deployed model runs on is itself validated at promotion
+time (Section~\ref{sec:data-versioning}): \texttt{populace\_uk\_2023}
+replaced the incumbent enhanced-\frs{} dataset via the certification in
+\texttt{policyengine.py}\#427, and that promotion was subsequently
+re-adjudicated on a broader scorecard recorded on
+PolicyEngine/\texttt{policyengine.py}\#462 (comment of 2026-07-08). The
+recorded adjudication runs two metric families identically over the
+candidate and the incumbent under \texttt{policyengine-uk} 2.89.2 at the
+bundle pin: \texttt{popdgp} joint-distribution metrics -- classifier
+two-sample tests and energy distance over income, tax-benefit, net-income,
+and combined views, on which all four views scored intermediate (neither
+clearly distinct nor statistically indistinguishable) -- and out-of-sample
+backtests that are never used as calibration targets: poverty rates
+against \hbai{}-published benchmarks (overall, child, and pensioner,
+before and after housing costs) and income-taxpayer counts by band against
+\hmrc{} benchmarks.
+
+Per that record, the candidate won the out-of-sample head-to-head 6 to 1
+with one tie and no decisive incumbent win; the record explicitly
+concludes that unqualified superiority over the incumbent is \emph{not}
+supported, and names four metrics on which both artifacts miss badly
+(child poverty after housing costs, Universal Credit caseload and
+expenditure, and the additional-rate taxpayer count). The record also
+separates these adjudicated out-of-sample rows from in-sample context rows
+(benefit caseloads and expenditure that both artifacts are calibrated
+toward), which are reported but not adjudicated -- the same distinction
+Section~\ref{sec:validation-ukmod} draws for the ``Official'' series. The
+pattern this establishes is the one this paper cites it for: a dataset
+becomes the default by winning an adjudicated, recorded comparison on a
+stated metric surface, and the record includes the metrics it does not
+win. \todo{If \texttt{policyengine.py}\#462's proposed pre-registered
+certification suite is implemented before this paper circulates, cite the
+merged implementation and restate these figures from its canonical
+scorecard artifact rather than from the issue comment.}
+
+\subsection{Data-level validation: a fenced replay of \hmrc{} distribution
+tables}
+\label{sec:validation-hmrc-replay}
+
+The \populace{} build replays \hmrc{}'s published personal-income
+distribution tables against the \spi{}-informed channel of
+Section~\ref{sec:data-efrs}, merged in the same contract as the coverage
+gate (PolicyEngine/populace\#420; adjudications recorded in
+\texttt{UK\_COVERAGE\_PROGRESS.md}). The replay register enumerates 208
+facts -- 8 income components $\times$ 13 total-income bands $\times$ 2
+measures per cell, parsed from the pinned official 2023--24 collated
+distribution tables spreadsheet (Tables 3.1 to 3.11; the replay surface
+covers the Table 3.6/3.7 component-by-band layouts) -- and its governing
+rule is the methodological point this subsection documents: a replay fact
+is asserted only where the survey instrument can express the underlying
+concept, and constituents the instrument cannot express are documented
+outward as reviewed, evidence-fenced exclusions rather than approximated
+silently.
+
+A per-constituent audit of the raw \frs{} source tables (\texttt{ADULT},
+\texttt{JOB}, \texttt{BENEFITS}, \texttt{ODDJOB}, and the other
+income-bearing tables) against the \spi{} 2022--23 Annex A variable
+definitions found that the \frs{} instrument cannot express five of the
+ten normalized \spi{} source constituents the replay requires -- taxable
+expenses payments and benefits in kind (\texttt{EPB}), deductible
+employment expenses (\texttt{EXPS}), taxable termination pay
+(\texttt{TAXTERM}), and both miscellaneous-income legs (\texttt{MOTHINC},
+\texttt{OTHERINC}) -- and can express two more only partially: the taxable
+social-security-benefit leg (\texttt{OSSBEN}) and the state-pension leg
+(\texttt{SRP}). The per-constituent evidence table, listing the raw \frs{}
+variables examined for each leg, is committed in
+\texttt{UK\_COVERAGE\_PROGRESS.md}. The build wires what is source-faithful
+and names what is not: the fully expressible legs -- \texttt{PAY} (pay
+from employment) and \texttt{UBISJA} (Jobseeker's Allowance and Income
+Support) -- and the structurally expressible Incapacity Benefit leg
+(\texttt{INCPBEN}; the current survey year observes no receipt) are
+carried directly from raw \frs{} variables; the two partial legs are wired
+as explicitly named subsets (\texttt{ossben\_identifiable\_subset},
+\texttt{srp\_regular\_code5}) and never presented as the full \spi{}
+concepts; and where a full source concept cannot be materialized, the
+runtime writes missing values rather than zeros or proxies.
+
+Two consequences follow, both stated in the merged record. First, because
+the inexpressible legs include a \emph{subtraction} -- \texttt{EXPS},
+employment expenses deducted in the \spi{} employment measure -- the
+omission bias on a reconstructed employment measure is not
+one-directional, so no fact survives even as a one-sided (directional)
+assertion. Second, because every published fact is banded by total income,
+which the \frs{} channel cannot completely materialize, the replay asserts
+none of the 208 facts: the committed replay report evaluates the full
+surface as 0 exact and 0 directional facts, with all 208 carried as
+evidence-fenced exclusions (each with a null estimate and a canonical
+fence naming its reason), and the build performs no calibration against
+these facts. What the replay does establish is that the \spi{}-side
+machinery is exact -- the \spi{}'s published accounting identity
+(\texttt{TEI + TII = TI}) holds by construction on every \spi{}-channel
+prediction, and the table parser passes its contract against the real
+published sheets. \hmrc{}'s distribution tables cannot serve as a
+like-for-like oracle for \frs{}-based microdata; the register documents
+that boundary per fact, and keeps the full 208-fact surface enumerated so
+the fence is visible rather than an omission.
+
 \subsection{Validation not yet assembled}
 
 \todo{The issue scope also names ``HMRC/DWP ready reckoners'' as a target
@@ -159,7 +265,11 @@ circulates or explicitly scoped out with a stated reason.}
 against DWP's own published HBAI statistics is a natural complement to the
 program-level aggregate validation in Section~\ref{sec:validation-ukmod} --
 the model's HBAI income-concept mapping (\texttt{docs/book/validation/hbai.md})
-establishes that the necessary variables exist, but no notebook comparing
-\policyengine{}-calculated HBAI poverty/income statistics against DWP's
-published HBAI statistics was found. State whether this is in scope for v1
-or deferred.}
+establishes that the necessary variables exist. The first HBAI-benchmark
+poverty-rate comparisons on the public record are the six poverty rows of
+the promotion adjudication (Section~\ref{sec:validation-promotion},
+policyengine.py\#462: overall/child/pensioner, before and after housing
+costs, for both the candidate and incumbent datasets), but a fuller HBAI
+distributional validation -- income deciles and full distributions against
+DWP's published HBAI release -- remains unassembled. State whether that
+fuller comparison is in scope for v1 or deferred.}

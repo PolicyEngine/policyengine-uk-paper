@@ -98,10 +98,109 @@ this outline; only their existence and stated purpose (confirmed via
 \texttt{gh api} directory listing and reading \texttt{rf-nowcasting-methodology.md}
 in full) are established here.}
 
-\subsection{Data versioning}
+\subsection{Release input-coverage contract}
+\label{sec:data-coverage}
+
+Every input column the UK national build exports to the engine is governed
+by an enforced release contract, merged as PolicyEngine/populace\#420
+(``UK release input-coverage contract: 145-required gate, effective-mass
+semantics, and the real-donor HMRC replay,'' merged 2026-07-13): the
+current contract requires \textbf{145} inputs and carries \textbf{0}
+reviewed exclusions. Coverage is defined on \emph{effective mass}, not raw
+nonzero counts: a required input must carry weighted signal on at least
+one part per million of its owning entity's effective population mass, so
+a column populated only on zero-weight rows does not count as covered. The
+gate fails closed: a release candidate that cannot populate a required
+input fails the release, and the only alternative status is a reviewed,
+evidence-backed exclusion -- of which the current contract carries none.
+Degenerate-required, wrong-entity, dormant/stale-exclusion, and
+missing-column conditions each fail the gate with named columns (per the
+merged PR record and the adjudication register committed at
+\texttt{UK\_COVERAGE\_PROGRESS.md} in the \populace{} repository).
+
+Exclusions themselves are monitored rather than grandfathered. The
+register opened at 143 required inputs and 2 reviewed exclusions, because
+two charitable-giving columns (\texttt{gift\_aid} and
+\texttt{charitable\_investment\_gifts}) carried signal only on zero-weight
+synthetic rows; when a rebuilt \spi{} stage gave both columns weighted
+signal above the floor, the stale-exclusion check itself demanded their
+promotion to hard requirements, producing the current 145/0 state
+(\texttt{UK\_COVERAGE\_PROGRESS.md}). For scale, the equivalent US
+register in the same monorepo (\texttt{COVERAGE\_PROGRESS.md}, verified
+2026-07-15) stands at 158 required inputs and 8 reviewed exclusions; the
+UK contract carries zero.
+
+\subsection{Local-area geography}
+\label{sec:data-geography}
+
+\populace{}'s UK build adds a local-geography spine mirroring its US
+census-block ladder: anchor every household at the finest published census
+geography, derive every other layer deterministically from that anchor,
+and keep one national dataset that is filterable at any grain rather than
+publishing per-area files. The design is recorded in
+PolicyEngine/populace\#349 and the implementation is merged as
+populace\#354 (``UK output-area-anchored geography ladder (US
+block-ladder pattern),'' merged 2026-07-09):
+\texttt{populace/packages/populace-build/src/populace/build/uk\_runtime/geography\_ladder.py}
+anchors each household at a 2021 Census output area via two seeded draws
+-- a Westminster parliamentary constituency (2024 boundaries) sampled
+within the household's calibrated region proportional to constituency
+household counts, then an output area within that constituency
+proportional to census population -- and derives every other layer (LSOA
+and MSOA by structural nesting; local authority district, ward, and ITL
+levels by pinned ONS lookups) from the anchor with no independent
+randomness.
+
+The merged module carries the discipline the US ladder established:
+per-layer source vintages are recorded in the ladder artifact and are
+mandatory (the loader refuses an artifact missing any, and assignment
+refuses a ladder whose constituency vintage differs from the one the
+constituencies were assigned under); exported columns are engine inputs or
+plain data columns, never persisted formula outputs; and a
+release-blocking gate checks GSS-code structure, ITL-prefix consistency,
+and a London-mass floor. At merge the ladder covers England and Wales
+end-to-end; a household whose region is absent from the ladder is refused
+by name rather than silently part-joined, with Scotland and Northern
+Ireland rungs to follow once their lookup vintages are pinned (per the PR
+record). \todo{Populace\#354 merges the ladder runtime, artifact builder,
+and gates, but deliberately defers wiring the assignment into the UK build
+behind the shared geography-spine schema to a follow-up -- the released UK
+artifact does not yet carry ladder-assigned output areas. Cite the
+follow-up PR and update this subsection once the assignment is wired into
+a released artifact.}
+
+\subsection{Data versioning and promotion}
+\label{sec:data-versioning}
 
 \todo{State the currently certified \populace{} bundle version for the UK
 build (per internal tracking, certified defaults were "4.18.7 (dense)" for
 both US and UK as of early July 2026 -- verify this is still current and
 cite the populace release/tag directly rather than an internal memory note,
 since this paper must cite public, checkable artifacts).}
+
+The UK default dataset was promoted through an adjudicated comparison
+rather than by recency. The current default, \texttt{populace\_uk\_2023},
+was certified in PolicyEngine/\texttt{policyengine.py}\#427 (``Certify UK
+Populace default dataset,'' merged 2026-06-19) on a matched-$N$ holdout
+comparison against the incumbent enhanced \frs{}: per the PR record,
+holdout loss 0.1239 vs.\ 0.3784, per-target wins 79 to 70, mean absolute
+relative target error 1.49\% with the worst target miss at 23.1\% against
+a 25\% release gate, and the incumbent's prior dataset names retained as
+resolvable aliases. A proposal to formalize this promotion gate as a
+pre-registered certification suite run at every default flip, together
+with a recorded retroactive adjudication of the UK promotion on broader
+metrics, is \texttt{policyengine.py}\#462 (open at this writing) and is
+summarized in Section~\ref{sec:validation-promotion}.
+
+\subsection{Licensing and data handling}
+\label{sec:data-licensing}
+
+The source microdata the pipeline consumes -- the \frs{} tables and the
+\spi{} public use tape -- are licensed through the UK Data Service and are
+handled outside version control: licensed row-level files never enter the
+\populace{} repository or its git history, tracked build artifacts are
+aggregate-only (the committed replay and gate reports contain no row-level
+donor data), and staging datasets remain untracked
+(PolicyEngine/populace\#420; \texttt{UK\_COVERAGE\_PROGRESS.md}). Build
+records instead pin each licensed input by checksum, so provenance is
+verifiable without redistributing the data.

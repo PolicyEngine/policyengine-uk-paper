@@ -53,12 +53,16 @@ This paper:
     (Section~\ref{sec:model}).
     \item Documents the survey microdata the model runs on -- the \frs{},
     its enhancement with \hmrc{} \spi{} income data, and calibration to
-    administrative totals -- and the versioned data pipeline that produces
-    it (Section~\ref{sec:data}).
+    administrative totals -- and the versioned, release-gated data
+    pipeline that produces it, including the input-coverage contract every
+    release candidate must pass (Section~\ref{sec:data}).
     \item Validates modelled aggregates against an independent
     microsimulation model (\ukmod{}) and official administrative and
     forecast aggregates (\hmrc{}, \dwp{}, \obr{}), and validates
-    individual-level calculations against \hmrc{}'s \spi{} microdata
+    individual-level calculations against \hmrc{}'s \spi{} microdata; it
+    also documents two data-level validation records from the \populace{}
+    pipeline -- the adjudicated promotion of the current default dataset
+    and a fenced replay register against \hmrc{} distribution tables
     (Section~\ref{sec:validation}).
     \item States what is not yet validated and where the model's coverage is
     partial, so that users can assess fitness for a given application

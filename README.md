@@ -2,7 +2,7 @@
 
 The canonical, versioned model paper for PolicyEngine UK: description and
 validation of the full tax-benefit microsimulation model — rules coverage,
-data (the populace stack), and validation against administrative outturns
+data (the Microcosm stack), and validation against administrative outturns
 and incumbent models (UKMOD/EUROMOD, and against HMRC/DWP ready reckoners and outturns where comparable).
 
 EUROMOD (Sutherland–Figari 2013) and TAXSIM (Feenberg–Coutts 1993) each
@@ -11,10 +11,10 @@ paper is *versioned*: v1 documents the model as deployed in 2026; engine
 migrations later produce a v2 rather than invalidating v1.
 
 Validation assets assembled from: the policyengine-uk test suite, docs, and
-validation notebooks (`docs/book/validation/`), and the populace UK build
-pipeline (`packages/populace-build/src/populace/build/uk_runtime/` in the
-[populace](https://github.com/PolicyEngine/populace) monorepo — there is no
-standalone `populace-uk` or `uk-data` repo; both are folded into that
+validation notebooks (`docs/book/validation/`), and the Microcosm UK build
+pipeline (`packages/microcosm-build/src/microcosm/build/uk_runtime/` in the
+[microcosm](https://github.com/PolicyEngine/microcosm) monorepo — there is no
+standalone `microcosm-uk` or `uk-data` repo; both are folded into that
 monorepo's UK build shard as of this outline). See [PLAN.md](PLAN.md) for
 the section-by-section evidence map.
 

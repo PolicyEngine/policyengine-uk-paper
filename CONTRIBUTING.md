@@ -3,7 +3,7 @@
 ## Review tiers
 
 Work in this repository routes by issue label, following the portfolio-wide
-doctrine (PolicyEngine/populace#305): `tier:fable` (frontier-model review:
+doctrine (PolicyEngine/microcosm#305): `tier:fable` (frontier-model review:
 claim-bearing prose, statistical semantics, framing that could read as
 advocacy) versus `tier:standard` (spec-complete assembly; acceptance tests
 judge the output). Issue #1 (this outline) is `tier:standard`: the

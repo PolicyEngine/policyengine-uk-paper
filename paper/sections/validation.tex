@@ -15,7 +15,7 @@ dataset replaced its predecessor
 against \hmrc{}'s published personal-income distribution tables
 (Section~\ref{sec:validation-hmrc-replay}). Every figure quoted in this
 section is drawn from a committed, version-controlled source in
-\texttt{policyengine-uk} or \texttt{populace}, or from a cited GitHub
+\texttt{policyengine-uk} or \texttt{microcosm}, or from a cited GitHub
 record on a \policyengine{} repository's issue tracker; none is recomputed
 for this paper. Where a number needs to be refreshed against the model's
 current state before submission, it is marked \todo{example}.
@@ -52,7 +52,7 @@ history. \todo{Re-run the notebook against the current model version before
 the paper drafts numeric claims -- the notebook's own import of
 \texttt{policyengine\_uk.data.datasets.frs.calibration.loss} no longer
 resolves against the current \texttt{policyengine-uk} tree (calibration
-code has moved into \texttt{populace.calibrate}), so it must be updated to
+code has moved into \texttt{microcosm.calibrate}), so it must be updated to
 run before its output can be cited with specific figures in prose. This
 outline cites the notebook's existence, method, and program coverage, which
 are independently verifiable by reading its source; it does not assert
@@ -188,10 +188,10 @@ scorecard artifact rather than from the issue comment.}
 tables}
 \label{sec:validation-hmrc-replay}
 
-The \populace{} build replays \hmrc{}'s published personal-income
+The \microcosm{} build replays \hmrc{}'s published personal-income
 distribution tables against the \spi{}-informed channel of
 Section~\ref{sec:data-efrs}, merged in the same contract as the coverage
-gate (PolicyEngine/populace\#420; adjudications recorded in
+gate (PolicyEngine/microcosm\#420; adjudications recorded in
 \texttt{UK\_COVERAGE\_PROGRESS.md}). The replay register enumerates 208
 facts -- 8 income components $\times$ 13 total-income bands $\times$ 2
 measures per cell, parsed from the pinned official 2023--24 collated
@@ -256,7 +256,7 @@ DWP's benefit expenditure tables) gives the marginal fiscal effect of a
 specific parameter change, which is a distinct and currently-unassembled
 validation target: comparing \policyengine{}'s reform-costing output against
 a published ready-reckoner line item for the same parameter change. No such
-comparison was found in the policyengine-uk or populace repositories during
+comparison was found in the policyengine-uk or microcosm repositories during
 this survey (2026-07-04); this is a genuine evidence gap, not an
 oversight in this outline, and should be either assembled before v1
 circulates or explicitly scoped out with a stated reason.}

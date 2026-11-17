@@ -40,7 +40,7 @@ title and state via `gh` at that date):
 
 - **HMRC/DWP ready reckoners**: no comparison of PolicyEngine's reform-costing
   output against a published ready-reckoner line item was found in either
-  `policyengine-uk` or `microcosm`. Named explicitly in the issue scope;
+  `policyengine-uk` or `populace`. Named explicitly in the issue scope;
   needs to be assembled or explicitly deferred with a stated reason.
 - **HBAI distributional validation**: `hbai.md` establishes the variable
   mapping needed to compute HBAI-style poverty/income statistics. The six

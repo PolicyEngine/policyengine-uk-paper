@@ -55,7 +55,7 @@ title and state via `gh` at that date):
 - **Re-running the two validation notebooks against the current model**: the
   `validation.ipynb` notebook imports
   `policyengine_uk.data.datasets.frs.calibration.loss`, which no longer
-  resolves — calibration code has migrated to `populace.calibrate`. The
+  resolves — calibration code has migrated to `microcosm.calibrate`. The
   notebook's *method and program coverage* are independently verifiable by
   reading its source (cited in `paper/sections/validation.tex`), but its
   *specific numeric outputs* need a re-run before they can be quoted in

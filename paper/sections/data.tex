@@ -3,12 +3,12 @@
 
 \policyengine{} UK's microsimulation runs on an enhanced version of the
 Family Resources Survey (\frs{}), constructed and calibrated by
-\populace{}, \policyengine{}'s open-source population data stack. This
+\microcosm{}, \policyengine{}'s open-source population data stack. This
 section documents the base survey, the enhancement pipeline, and the
-calibration procedure, citing the \populace{} build code that implements
+calibration procedure, citing the \microcosm{} build code that implements
 each step. \todo{Confirm this section's framing is consistent with however
-\populace{}'s own model/data paper (if drafted concurrently, per the
-imputation-paper and populace-be-microsim threads in the wider publication
+\microcosm{}'s own model/data paper (if drafted concurrently, per the
+imputation-paper and microcosm-be-microsim threads in the wider publication
 program) describes the same pipeline, to avoid the two papers diverging on
 the same facts.}
 
@@ -28,9 +28,9 @@ of 2026-07-04) and any dataset-loading code, not from memory.}
 
 The \frs{} undersamples high incomes relative to \hmrc{}'s Survey of
 Personal Incomes (\spi{}), a limitation shared by household surveys
-generally. \populace{}'s UK build pipeline addresses this with an
+generally. \microcosm{}'s UK build pipeline addresses this with an
 ``enhanced FRS'' (\efrs{}) construction documented in
-\texttt{populace/packages/populace-build/src/populace/build/uk\_runtime/spi\_support.py}:
+\texttt{microcosm/packages/microcosm-build/src/microcosm/build/uk\_runtime/spi\_support.py}:
 a zero-weight copy of the \frs{} is created and filled with \spi{}-trained
 quantile-regression-forest income imputations (employment income,
 self-employment income, savings interest, dividends, private pension
@@ -42,7 +42,7 @@ contributions, tax-free savings income, Universal Credit receipt, and
 others) on the synthetic rows so they do not inherit an FRS donor's
 unrelated benefit or pension profile. \todo{Cite the specific QRF
 specification (predictor set, training target) once confirmed against the
-\texttt{populace-fit} code the sibling imputation paper documents -- this
+\texttt{microcosm-fit} code the sibling imputation paper documents -- this
 section should point to that paper's methodology rather than re-derive it,
 per PolicyEngine's stated preference to keep this description a summary of
 what is proven elsewhere.}
@@ -55,14 +55,14 @@ Section~\ref{sec:validation-spi}.
 \label{sec:data-calibration}
 
 \policyengine{} UK's data is calibrated -- reweighted to match a set of
-administrative and forecast targets -- via \populace{}'s calibration
-package (\texttt{populace.calibrate}, formerly a
+administrative and forecast targets -- via \microcosm{}'s calibration
+package (\texttt{microcosm.calibrate}, formerly a
 \texttt{policyengine\_uk.data.datasets.frs.calibration.loss} module
 referenced in the model's validation notebook; that historical import path
-had already been superseded by the \populace{} migration as of this
+had already been superseded by the \microcosm{} migration as of this
 writing, and this section should cite the current location precisely once a
 canonical target list is agreed). Calibration targets are defined in
-\texttt{populace/packages/populace-build/src/populace/build/uk\_runtime/local\_targets.py}
+\texttt{microcosm/packages/microcosm-build/src/microcosm/build/uk\_runtime/local\_targets.py}
 and include, at minimum, the aggregate income tax liability implied by
 official \obr{} costings (the loss module referenced program-level budgetary
 impact parameters such as
@@ -70,7 +70,7 @@ impact parameters such as
 \todo{Enumerate the full current target list (which programs, which
 geography levels -- the local\_targets.py module also supports local-area
 row-wise geography per the UK local-area build tests) and the calibration
-method (the populace README describes \texttt{populace-calibrate} as
+method (the Microcosm README describes \texttt{microcosm-calibrate} as
 supporting APG and L0-regularized approaches; confirm which the UK build
 uses in production).}
 
@@ -102,7 +102,7 @@ in full) are established here.}
 \label{sec:data-coverage}
 
 Every input column the UK national build exports to the engine is governed
-by an enforced release contract, merged as PolicyEngine/populace\#420
+by an enforced release contract, merged as PolicyEngine/microcosm\#420
 (``UK release input-coverage contract: 145-required gate, effective-mass
 semantics, and the real-donor HMRC replay,'' merged 2026-07-13): the
 current contract requires \textbf{145} inputs and carries \textbf{0}
@@ -116,7 +116,7 @@ evidence-backed exclusion -- of which the current contract carries none.
 Degenerate-required, wrong-entity, dormant/stale-exclusion, and
 missing-column conditions each fail the gate with named columns (per the
 merged PR record and the adjudication register committed at
-\texttt{UK\_COVERAGE\_PROGRESS.md} in the \populace{} repository).
+\texttt{UK\_COVERAGE\_PROGRESS.md} in the \microcosm{} repository).
 
 Exclusions themselves are monitored rather than grandfathered. The
 register opened at 143 required inputs and 2 reviewed exclusions, because
@@ -133,15 +133,15 @@ UK contract carries zero.
 \subsection{Local-area geography}
 \label{sec:data-geography}
 
-\populace{}'s UK build adds a local-geography spine mirroring its US
+\microcosm{}'s UK build adds a local-geography spine mirroring its US
 census-block ladder: anchor every household at the finest published census
 geography, derive every other layer deterministically from that anchor,
 and keep one national dataset that is filterable at any grain rather than
 publishing per-area files. The design is recorded in
-PolicyEngine/populace\#349 and the implementation is merged as
-populace\#354 (``UK output-area-anchored geography ladder (US
+PolicyEngine/microcosm\#349 and the implementation is merged as
+microcosm\#354 (``UK output-area-anchored geography ladder (US
 block-ladder pattern),'' merged 2026-07-09):
-\texttt{populace/packages/populace-build/src/populace/build/uk\_runtime/geography\_ladder.py}
+\texttt{microcosm/packages/microcosm-build/src/microcosm/build/uk\_runtime/geography\_ladder.py}
 anchors each household at a 2021 Census output area via two seeded draws
 -- a Westminster parliamentary constituency (2024 boundaries) sampled
 within the household's calibrated region proportional to constituency
@@ -162,7 +162,7 @@ and a London-mass floor. At merge the ladder covers England and Wales
 end-to-end; a household whose region is absent from the ladder is refused
 by name rather than silently part-joined, with Scotland and Northern
 Ireland rungs to follow once their lookup vintages are pinned (per the PR
-record). \todo{Populace\#354 merges the ladder runtime, artifact builder,
+record). \todo{Microcosm\#354 merges the ladder runtime, artifact builder,
 and gates, but deliberately defers wiring the assignment into the UK build
 behind the shared geography-spine schema to a follow-up -- the released UK
 artifact does not yet carry ladder-assigned output areas. Cite the
@@ -172,10 +172,10 @@ a released artifact.}
 \subsection{Data versioning and promotion}
 \label{sec:data-versioning}
 
-\todo{State the currently certified \populace{} bundle version for the UK
+\todo{State the currently certified \microcosm{} bundle version for the UK
 build (per internal tracking, certified defaults were "4.18.7 (dense)" for
 both US and UK as of early July 2026 -- verify this is still current and
-cite the populace release/tag directly rather than an internal memory note,
+cite the Microcosm release/tag directly rather than an internal memory note,
 since this paper must cite public, checkable artifacts).}
 
 The UK default dataset was promoted through an adjudicated comparison
@@ -198,9 +198,9 @@ summarized in Section~\ref{sec:validation-promotion}.
 The source microdata the pipeline consumes -- the \frs{} tables and the
 \spi{} public use tape -- are licensed through the UK Data Service and are
 handled outside version control: licensed row-level files never enter the
-\populace{} repository or its git history, tracked build artifacts are
+\microcosm{} repository or its git history, tracked build artifacts are
 aggregate-only (the committed replay and gate reports contain no row-level
 donor data), and staging datasets remain untracked
-(PolicyEngine/populace\#420; \texttt{UK\_COVERAGE\_PROGRESS.md}). Build
+(PolicyEngine/microcosm\#420; \texttt{UK\_COVERAGE\_PROGRESS.md}). Build
 records instead pin each licensed input by checksum, so provenance is
 verifiable without redistributing the data.
